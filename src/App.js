@@ -4,7 +4,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      array: this.getArray()
+      array: this.getArray(),
+      mostConsecutiveGuesses: 0,
+      uniqueSelections: 0
     };
   }
 
@@ -13,10 +15,11 @@ class App extends Component {
     for (let i = 1; i <= 10; i++) {
       arr.push(i);
     }
-    return this.shuffle(arr);
+    return arr;
   }
 
-  shuffle(array) {
+  shuffle() {
+    let array = this.state.array;
     // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array  shuffle(array) {
     var currentIndex = array.length,
       temporaryValue,
@@ -34,6 +37,8 @@ class App extends Component {
       array[randomIndex] = temporaryValue;
     }
 
+    this.setState({ array: [...array] });
+
     return array;
   }
 
@@ -41,6 +46,7 @@ class App extends Component {
     const arr = JSON.stringify(this.state.array);
     return (
       <div className='App'>
+        <button onClick={() => this.shuffle()}>Shuffle</button>
         <p>{arr}</p>
         hiiii
       </div>
