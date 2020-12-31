@@ -1,4 +1,14 @@
 import { Component } from 'react';
+import image1 from './images/1.jpg';
+import image2 from './images/2.jpg';
+import image3 from './images/3.jpg';
+import image4 from './images/4.jpg';
+import image5 from './images/5.jpg';
+import image6 from './images/6.jpg';
+import image7 from './images/7.jpg';
+import image8 from './images/8.jpg';
+import image9 from './images/9.jpg';
+import image10 from './images/10.jpg';
 
 class App extends Component {
   constructor() {
@@ -11,11 +21,18 @@ class App extends Component {
   }
 
   getArray() {
-    let arr = [];
-    for (let i = 1; i <= 10; i++) {
-      arr.push(i);
-    }
-    return arr;
+    return [
+      image1,
+      image2,
+      image3,
+      image4,
+      image5,
+      image6,
+      image7,
+      image8,
+      image9,
+      image10
+    ];
   }
 
   shuffle() {
@@ -42,13 +59,20 @@ class App extends Component {
     return array;
   }
 
+  getImages = () => {
+    const arr = this.state.array;
+
+    return arr.map(index => <img src={index} />);
+  };
+
   render() {
-    const arr = JSON.stringify(this.state.array);
+    const images = this.getImages();
+    const arr = JSON.stringify(this.state);
     return (
       <div className='App'>
         <button onClick={() => this.shuffle()}>Shuffle</button>
         <p>{arr}</p>
-        hiiii
+        {images}
       </div>
     );
   }
