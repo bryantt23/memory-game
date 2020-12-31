@@ -17,7 +17,8 @@ class App extends Component {
       array: this.getArray(),
       mostConsecutiveGuesses: 0,
       uniqueSelections: new Set(),
-      youWonGame: false
+      youWonGame: false,
+      showAlreadySelectedBalloons: false
     };
   }
 
@@ -101,24 +102,44 @@ class App extends Component {
   render() {
     console.log(this.state.uniqueSelections);
     const images = this.getImages();
+    const alreadySelectedBalloons = Array.from(this.state.uniqueSelections)
+      .sort((a, b) => a - b)
+      .join(', ');
+    const buttonText = this.state.showAlreadySelectedBalloons
+      ? 'Hide already selected balloons'
+      : 'Show already selected balloons';
     return (
       <div className='App'>
         {!this.state.youWonGame ? (
           <div>
             <h1>Memory Game</h1>
             <p>
-              To win only click on an item you have not clicked on before. If
-              you click on an item twice the count restarts. If you click on all
-              10 without clicking on an balloon twice you win.
+              To win only click on a balloon you have not clicked on before. If
+              you click on a balloon twice the count restarts. If you click on
+              all 10 balloons without clicking on a balloon twice you win.
             </p>
+            <button
+              onClick={() => {
+                this.setState({
+                  showAlreadySelectedBalloons: !this.state
+                    .showAlreadySelectedBalloons
+                });
+              }}
+            >
+              {buttonText}
+            </button>
             <p>Current correct guesses: {this.state.uniqueSelections.size}</p>
             <p>Most correct guesses: {this.state.mostConsecutiveGuesses}</p>
-
+            {this.state.showAlreadySelectedBalloons && (
+              <p>
+                Balloons that have already selected: {alreadySelectedBalloons}
+              </p>
+            )}
             {images}
           </div>
         ) : (
           <div>
-            <h1>You won!!!</h1>
+            <h1>You win!!!</h1>
           </div>
         )}
       </div>
