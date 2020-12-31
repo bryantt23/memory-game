@@ -65,14 +65,14 @@ class App extends Component {
     const previousGuesses = this.state.uniqueSelections;
     if (!previousGuesses.has(indexSelected)) {
       previousGuesses.add(indexSelected);
+      if (previousGuesses.size === this.state.array.length) {
+        this.setState({ youWonGame: true });
+      }
       this.setState({
         uniqueSelections: previousGuesses
       });
       if (previousGuesses.size > this.state.mostConsecutiveGuesses) {
         this.setState({ mostConsecutiveGuesses: previousGuesses.size });
-      }
-      if (previousGuesses.size === this.state.array.length) {
-        this.setState({ youWonGame: true });
       }
     } else {
       let newSet = new Set();
@@ -83,7 +83,7 @@ class App extends Component {
     }
   };
 
-  getImages = e => {
+  getImages = () => {
     const arr = this.state.array;
     return arr.map(obj => (
       <img
@@ -100,14 +100,13 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state.uniqueSelections);
     const images = this.getImages();
     const alreadySelectedBalloons = Array.from(this.state.uniqueSelections)
       .sort((a, b) => a - b)
       .join(', ');
     const buttonText = this.state.showAlreadySelectedBalloons
       ? 'Hide already selected balloons'
-      : 'Show already selected balloons';
+      : 'Guarantee Victory: Show already selected balloons';
     return (
       <div className='App'>
         {!this.state.youWonGame ? (
