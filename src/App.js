@@ -16,22 +16,23 @@ class App extends Component {
     this.state = {
       array: this.getArray(),
       mostConsecutiveGuesses: 0,
-      uniqueSelections: 0
+      uniqueSelections: new Set(),
+      youWonGame: false
     };
   }
 
   getArray() {
     return [
-      { index: 0, src: image1 },
-      { index: 1, src: image2 },
-      { index: 2, src: image3 },
-      { index: 3, src: image4 },
-      { index: 4, src: image5 },
-      { index: 5, src: image6 },
-      { index: 6, src: image7 },
-      { index: 7, src: image8 },
-      { index: 8, src: image9 },
-      { index: 9, src: image10 }
+      { balloonNumber: 1, src: image1 },
+      { balloonNumber: 2, src: image2 },
+      { balloonNumber: 3, src: image3 },
+      { balloonNumber: 4, src: image4 },
+      { balloonNumber: 5, src: image5 },
+      { balloonNumber: 6, src: image6 },
+      { balloonNumber: 7, src: image7 },
+      { balloonNumber: 8, src: image8 },
+      { balloonNumber: 9, src: image9 },
+      { balloonNumber: 10, src: image10 }
     ];
   }
 
@@ -59,37 +60,67 @@ class App extends Component {
     return array;
   }
 
-  functionCall = event => {
-    console.log(event.target.getAttribute('a-key'));
+  checkGameState = indexSelected => {
+    const previousGuesses = this.state.uniqueSelections;
+    if (!previousGuesses.has(indexSelected)) {
+      previousGuesses.add(indexSelected);
+      this.setState({
+        uniqueSelections: previousGuesses
+      });
+      if (previousGuesses.size > this.state.mostConsecutiveGuesses) {
+        this.setState({ mostConsecutiveGuesses: previousGuesses.size });
+      }
+      if (previousGuesses.size === this.state.array.length) {
+        this.setState({ youWonGame: true });
+      }
+    } else {
+      let newSet = new Set();
+      newSet.add(indexSelected);
+      this.setState({
+        uniqueSelections: newSet
+      });
+    }
   };
-  print(index) {
-    console.log(index);
-  }
 
   getImages = e => {
     const arr = this.state.array;
     return arr.map(obj => (
       <img
-        a-key={obj.index}
+        alt='blah'
+        a-key={obj.balloonNumber}
         src={obj.src}
-        key={obj.index}
+        key={obj.balloonNumber}
         onClick={() => {
-          this.print(obj.index);
-          // this.functionCall();
           this.shuffle();
+          this.checkGameState(obj.balloonNumber);
         }}
       />
     ));
   };
 
   render() {
+    console.log(this.state.uniqueSelections);
     const images = this.getImages();
-    const arr = JSON.stringify(this.state);
     return (
       <div className='App'>
-        <button onClick={() => this.shuffle()}>Shuffle</button>
-        <p>{arr}</p>
-        {images}
+        {!this.state.youWonGame ? (
+          <div>
+            <h1>Memory Game</h1>
+            <p>
+              To win only click on an item you have not clicked on before. If
+              you click on an item twice the count restarts. If you click on all
+              10 without clicking on an balloon twice you win.
+            </p>
+            <p>Current correct guesses: {this.state.uniqueSelections.size}</p>
+            <p>Most correct guesses: {this.state.mostConsecutiveGuesses}</p>
+
+            {images}
+          </div>
+        ) : (
+          <div>
+            <h1>You won!!!</h1>
+          </div>
+        )}
       </div>
     );
   }
