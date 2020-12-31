@@ -22,16 +22,16 @@ class App extends Component {
 
   getArray() {
     return [
-      image1,
-      image2,
-      image3,
-      image4,
-      image5,
-      image6,
-      image7,
-      image8,
-      image9,
-      image10
+      { index: 0, src: image1 },
+      { index: 1, src: image2 },
+      { index: 2, src: image3 },
+      { index: 3, src: image4 },
+      { index: 4, src: image5 },
+      { index: 5, src: image6 },
+      { index: 6, src: image7 },
+      { index: 7, src: image8 },
+      { index: 8, src: image9 },
+      { index: 9, src: image10 }
     ];
   }
 
@@ -59,10 +59,27 @@ class App extends Component {
     return array;
   }
 
-  getImages = () => {
-    const arr = this.state.array;
+  functionCall = event => {
+    console.log(event.target.getAttribute('a-key'));
+  };
+  print(index) {
+    console.log(index);
+  }
 
-    return arr.map(index => <img src={index} />);
+  getImages = e => {
+    const arr = this.state.array;
+    return arr.map(obj => (
+      <img
+        a-key={obj.index}
+        src={obj.src}
+        key={obj.index}
+        onClick={() => {
+          this.print(obj.index);
+          // this.functionCall();
+          this.shuffle();
+        }}
+      />
+    ));
   };
 
   render() {
